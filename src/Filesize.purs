@@ -4,6 +4,7 @@ import Prelude
 import Data.Generic.Rep         (class Generic)
 import Data.Generic.Rep.Show    (genericShow)
 import Data.Maybe               (Maybe(..))
+import Data.Number.Format       (toStringWith, fixed)
 import Math                     (pow)
 
 data SizeUnit
@@ -41,10 +42,10 @@ getSizeUnit bytes
 getHumanSize :: Number -> String
 getHumanSize bytes = case sUnit of
   Just Byte     -> (show bytes) <> " bytes"
-  Just Kilobyte -> (show (bytes / getBytes Kilobyte)) <> " kb"
-  Just Megabyte -> (show (bytes / getBytes Megabyte)) <> " mb"
-  Just Gigabyte -> (show (bytes / getBytes Gigabyte)) <> " gb"
-  Just Terabyte -> (show (bytes / getBytes Terabyte)) <> " tb"
+  Just Kilobyte -> (toStringWith (fixed 1) (bytes / getBytes Kilobyte)) <> " kb"
+  Just Megabyte -> (toStringWith (fixed 1) (bytes / getBytes Megabyte)) <> " mb"
+  Just Gigabyte -> (toStringWith (fixed 1) (bytes / getBytes Gigabyte)) <> " gb"
+  Just Terabyte -> (toStringWith (fixed 1) (bytes / getBytes Terabyte)) <> " tb"
   Nothing       -> ""
   where
     sUnit = getSizeUnit bytes
